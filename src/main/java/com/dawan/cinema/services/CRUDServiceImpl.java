@@ -1,4 +1,4 @@
-package com.dawan.cinema.crud;
+package com.dawan.cinema.services;
 
 import com.dawan.cinema.mappers.Mapper;
 import org.springframework.data.repository.CrudRepository;
@@ -48,7 +48,7 @@ public abstract class CRUDServiceImpl<T, D, ID> implements CRUDService<T, D, ID>
     @Override
     public void delete(ID id) {
         if (existsById(id)) {
-            throw new RuntimeException("Resource not found with id : "+ id);
+            throw new RuntimeException("Resource not found with id : " + id);
         }
         repository.deleteById(id);
     }

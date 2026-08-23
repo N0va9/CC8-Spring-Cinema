@@ -1,4 +1,4 @@
-package com.dawan.cinema.crud;
+package com.dawan.cinema.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -7,6 +7,8 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.dawan.cinema.services.CRUDService;
 
 import java.util.Optional;
 

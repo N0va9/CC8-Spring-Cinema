@@ -1,4 +1,4 @@
-package com.dawan.cinema.crud;
+package com.dawan.cinema.services;
 
 import java.util.Optional;
 
