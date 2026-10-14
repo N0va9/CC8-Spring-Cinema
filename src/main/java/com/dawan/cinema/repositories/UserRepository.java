@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.dawan.cinema.entities.User;
 
 
-public interface UserRepository extends JpaRepository<User, Integer>{
+public interface UserRepository extends JpaRepository<User, Long>{
 	
 	@Query("FROM User u WHERE u.username = :username")
 	Optional<User> findByUsername(String username);

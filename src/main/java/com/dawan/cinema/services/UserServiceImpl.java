@@ -66,13 +66,13 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public void deleteById(int id) throws Exception {
+	public void deleteById(Long id) throws Exception {
 		userRepository.deleteById(id);
 		
 	}
 
 	@Override
-	public UserDto getById(int id) throws Exception {
+	public UserDto getById(Long id) throws Exception {
 		
 		Optional<User> optional = userRepository.findById(id);		
 		if(optional.isPresent()) {
@@ -87,7 +87,6 @@ public class UserServiceImpl implements IUserService{
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new GlobalException("Username déjà utilisé: " + userDto.getUsername());
         }
-		user.setId(0);
 		user.setPassword(encoder.encode(user.getPassword()));
 		User savedUser = userRepository.saveAndFlush(user);
 		
@@ -98,7 +97,7 @@ public class UserServiceImpl implements IUserService{
 	public UserDto update(UserDto userDto) throws Exception {
 		
 		User user = DtoTool.convert(userDto, User.class);
-		if(user.getId() == 0 || !userRepository.existsById(user.getId())) {
+		if(user.getId() == null || !userRepository.existsById(user.getId())) {
             throw new GlobalException("Utilisateur non-existant avec id: " + userDto.getId());
 		}
 		

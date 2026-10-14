@@ -21,7 +21,7 @@ public abstract class CRUDServiceImpl<T, D, ID> implements CRUDService<T, D, ID>
 
     @Override
     public boolean existsById(ID id) {
-        return !repository.existsById(id);
+        return repository.existsById(id);
     }
 
     @Override

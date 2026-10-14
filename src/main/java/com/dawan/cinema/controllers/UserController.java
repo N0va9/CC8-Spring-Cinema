@@ -34,12 +34,12 @@ public class UserController {
 	}
 	
 	@GetMapping(value = "/{id}", produces = "application/json")
-	public UserDto getById(@PathVariable int id) throws Exception{
+	public UserDto getById(@PathVariable Long id) throws Exception{
 		return userService.getById(id);
 	}
 	
 	@DeleteMapping(value = "/{id}", produces = "application/json")
-	public ResponseEntity<String> delete(@PathVariable int id) throws Exception{
+	public ResponseEntity<String> delete(@PathVariable Long id) throws Exception{
 		userService.deleteById(id);
 		return ResponseEntity.status(HttpStatus.OK).body("User with id = "+id+" deleted.");
 	}

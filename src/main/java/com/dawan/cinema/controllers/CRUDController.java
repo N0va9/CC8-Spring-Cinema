@@ -92,7 +92,7 @@ public abstract class CRUDController<T, D, ID> {
     )
     @SecurityRequirement(name="basicAuth")
     public ResponseEntity<Void> delete(@PathVariable ID id) {
-        if (service.existsById(id)) {
+        if (!service.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         service.delete(id);
