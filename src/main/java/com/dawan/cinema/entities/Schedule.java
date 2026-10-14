@@ -17,7 +17,7 @@ public class Schedule extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime heureFin;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "schedule")
     private Set<Session> sessions = new HashSet<>();
 
 	public LocalDateTime getHeureDebut() {
