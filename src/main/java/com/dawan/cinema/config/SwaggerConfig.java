@@ -1,4 +1,4 @@
-package com.dawan.cinema;
+package com.dawan.cinema.config;
 
 
 import java.util.List;

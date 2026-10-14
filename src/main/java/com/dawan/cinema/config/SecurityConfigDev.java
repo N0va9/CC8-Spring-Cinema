@@ -1,4 +1,4 @@
-package com.dawan.cinema;
+package com.dawan.cinema.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
