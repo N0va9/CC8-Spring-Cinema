@@ -1,0 +1,146 @@
+:root {
+    --ink: #1C1A17;
+    --paper: #F3EBDD;
+    --card: #FFFDF8;
+    --accent: #B8301E;
+    --mustard: #E3A72F;
+}
+
+body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Work Sans', sans-serif;
+    /* Sticky footer : le pied de page reste en bas même si la page est courte */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body > main {
+    flex: 1 0 auto;
+}
+
+a { color: var(--ink); }
+a:hover { color: var(--accent); }
+
+.font-display {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+.hero-title {
+    font-size: clamp(2.8rem, 8vw, 5.25rem);
+    line-height: 0.95;
+}
+.text-accent { color: var(--accent); }
+.text-paper { color: var(--paper); }
+.bg-ink { background: var(--ink); }
+
+/* Navigation */
+.retro-nav .navbar-brand,
+.retro-nav .nav-link {
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.06em;
+    color: var(--paper);
+}
+.retro-nav .navbar-brand { font-size: 1.8rem; }
+.retro-nav .nav-link:hover { color: var(--mustard); }
+
+/* Formulaires */
+.search-form { max-width: 48rem; }
+.form-control.retro-input {
+    border: 3px solid var(--ink);
+    border-radius: 0;
+    background: var(--card);
+    min-height: 3.5rem;
+}
+.form-control.retro-input-sm { min-height: auto; }
+.form-control.retro-input:focus {
+    border-color: var(--accent);
+    box-shadow: none;
+}
+
+/* Boutons */
+.btn-retro {
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.06em;
+    background: var(--accent);
+    color: #FFFFFF;
+    border: 3px solid var(--ink);
+    border-radius: 0;
+    box-shadow: 5px 5px 0 var(--ink);
+    min-height: 3.5rem;
+}
+.btn-retro:hover { background: var(--ink); color: var(--paper); }
+.btn-retro:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--ink); }
+
+.btn-ink {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 0;
+    font-weight: 700;
+}
+.btn-ink:hover { background: var(--accent); color: #FFFFFF; }
+
+/* Cartes */
+.card-retro {
+    background: var(--card);
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+}
+
+/* Bandeau entre deux filets */
+.retro-rule {
+    border-top: 3px solid var(--ink);
+    border-bottom: 3px solid var(--ink);
+    padding: 0.85rem 0;
+}
+
+/* Liste des films */
+.film-row {
+    border-bottom: 2px dashed var(--ink);
+    padding-bottom: 1.25rem;
+}
+.film-num {
+    font-family: 'Anton', sans-serif;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--accent);
+    min-width: 4.5rem;
+}
+.film-info { flex: 1 1 16rem; }
+
+/* Séances en forme de ticket */
+.ticket {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 6.25rem;
+    padding: 0.6rem 0.9rem;
+    background: var(--mustard);
+    border: 2px dashed var(--ink);
+    color: var(--ink);
+}
+.ticket-time {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.1;
+}
+.ticket-info {
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Pagination */
+.pagination .page-link {
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    color: var(--ink);
+    background: var(--card);
+}
+.pagination .page-item.active .page-link {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+}

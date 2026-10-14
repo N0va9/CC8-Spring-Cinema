@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Page introuvable')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5 text-center">
+    <h1 class="font-display hero-title text-accent">404</h1>
+    <p class="fs-4 fw-medium mb-4" th:text="${message} ?: 'Cette page n’existe pas.'">Cette page n’existe pas.</p>
+    <a class="btn btn-retro px-4 d-inline-flex align-items-center" th:href="@{/}">RETOUR À L'ACCUEIL</a>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
