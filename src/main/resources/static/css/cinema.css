@@ -202,3 +202,21 @@ a:hover { color: var(--accent); }
     background: var(--ink);
     color: var(--paper);
 }
+
+/* Grille de tickets : toutes les cases ont la même largeur et s'alignent en colonnes */
+.ticket-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+    gap: 0.5rem;
+}
+.ticket-grid .ticket {
+    min-width: 0;
+}
+.ticket-info {
+    white-space: nowrap;
+}
+
+/* Programme d'un cinéma : la grille prend la place restante à côté du titre du film */
+.tickets-col {
+    flex: 1 1 22rem;
+}
