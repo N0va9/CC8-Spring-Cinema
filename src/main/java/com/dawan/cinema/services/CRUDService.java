@@ -9,7 +9,13 @@ import org.springframework.data.domain.Pageable;
  */
 public interface CRUDService<D> {
 
-    Page<D> getAll(Pageable pageable);
+    /**
+     * Liste paginée, filtrée par mot-clé si fourni
+     * 
+     * @param keyword mot-clé de recherche, ignoré s'il est null ou vide
+     * @param pageable page, taille et tri demandés
+     */
+    Page<D> getAll(String keyword, Pageable pageable);
 
     D getById(Long id);
 

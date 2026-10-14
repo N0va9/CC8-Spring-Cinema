@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.dawan.cinema.entities.Cinema;
 
+/* Accès aux données des cinémas */
 public interface CinemaRepository extends JpaRepository<Cinema, Long>{
 	@Query("""
 			SELECT c FROM Cinema c

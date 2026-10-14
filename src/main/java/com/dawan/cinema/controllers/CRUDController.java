@@ -21,9 +21,10 @@ public abstract class CRUDController<D> {
 	}
 
 	@GetMapping
-	@Operation(summary = "Liste paginée")
-	public Page<D> getAll(@ParameterObject @PageableDefault(size = 10, sort = "id") Pageable pageable) {
-		return service.getAll(pageable);
+	@Operation(summary = "Liste paginée, avec recherche optionnelle par mot-clé")
+	public Page<D> getAll(@RequestParam(required = false) String keyword,
+        	@ParameterObject @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+    	return service.getAll(keyword, pageable);
 	}
 
 	@GetMapping("/{id}")

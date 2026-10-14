@@ -15,24 +15,37 @@ import com.dawan.cinema.mappers.Mapper;
  * 
  * @param <E> type de l'entité
  * @param <D> type du DTO
+ * @param <R> type du repository
  */
 @Transactional (readOnly = true)
-public abstract class CRUDServiceImpl<E extends BaseEntity, D> implements CRUDService<D> {
+public abstract class CRUDServiceImpl<E extends BaseEntity, D, R extends JpaRepository<E, Long>>
+        implements CRUDService<D> {
 
-    protected final JpaRepository<E, Long> repository;
+    protected final R repository;
     protected final Mapper<E, D> mapper;
     private final String resourceName;
 
-    protected CRUDServiceImpl(JpaRepository<E, Long> repository, Mapper<E, D> mapper, Class<E> entityClass) {
+    protected CRUDServiceImpl(R repository, Mapper<E, D> mapper, Class<E> entityClass) {
         this.repository = repository;
         this.mapper = mapper;
         this.resourceName = entityClass.getSimpleName();
     }
 
-    @Override 
-    public Page<D> getAll(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toDto);
+    @Override
+    public Page<D> getAll(String keyword, Pageable pageable) {
+        Page<E> page = (keyword == null || keyword.isBlank())
+            ? repository.findAll(pageable)
+            : searchByKeyword(keyword.trim(), pageable);
+        return page.map(mapper::toDto);
     }
+
+    /**
+     * Recherche propre à chaque entité
+     *
+     * @param keyword  mot-clé non vide
+     * @param pageable page, taille et tri demandés
+     */
+    protected abstract Page<E> searchByKeyword(String keyword, Pageable pageable);
 
     @Override
     public D getById(Long id) {
