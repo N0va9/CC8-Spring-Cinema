@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Salles')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <nav th:replace="~{fragments/layout :: adminNav('rooms')}"></nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+        <h1 class="font-display display-5 mb-0">Admin · <span class="text-accent">Salles</span></h1>
+        <a class="btn btn-retro px-4 d-inline-flex align-items-center" th:href="@{/admin/rooms/new}">+ NOUVELLE SALLE</a>
+    </div>
+
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <form class="row g-3 search-form mb-4" th:action="@{/admin/rooms}" method="get" role="search">
+        <div class="col-12 col-md">
+            <label for="keyword" class="visually-hidden">Rechercher une salle</label>
+            <input id="keyword" class="form-control retro-input" type="search" name="keyword"
+                   th:value="${keyword}" placeholder="Nom ou ville du cinéma">
+        </div>
+        <div class="col-12 col-md-auto d-grid">
+            <button class="btn btn-ink px-4" type="submit">Rechercher</button>
+        </div>
+    </form>
+
+    <p th:if="${page.empty}" class="fw-bold">Aucune salle.</p>
+
+    <div class="table-responsive card-retro" th:unless="${page.empty}">
+        <table class="table table-retro align-middle mb-0">
+            <thead>
+            <tr>
+                <th scope="col">Cinéma</th>
+                <th scope="col">Salle</th>
+                <th scope="col">Capacité</th>
+                <th scope="col">Construction</th>
+                <th scope="col" class="text-end">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${page.content}">
+                <td class="fw-bold" th:text="${r.cinemaNom}">Cinéma</td>
+                <td th:text="|n° ${r.numero}|">n° 1</td>
+                <td th:text="|${r.capacite} places|">120 places</td>
+                <td th:text="${#temporals.format(r.dateConstr, 'dd/MM/yyyy')}">01/09/2015</td>
+                <td class="text-end">
+                    <div class="d-inline-flex gap-2">
+                        <a class="btn btn-ink btn-sm" th:href="@{/admin/rooms/{id}/edit(id=${r.id})}">Modifier</a>
+                        <form th:action="@{/admin/rooms/{id}/delete(id=${r.id})}" method="post"
+                              onsubmit="return confirm('Supprimer cette salle ?');">
+                            <button class="btn btn-outline-danger btn-sm rounded-0" type="submit">Supprimer</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <nav th:replace="~{fragments/layout :: pagination(${page}, '/admin/rooms', ${keyword})}"></nav>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -38,6 +38,17 @@
     </ul>
 </nav>
 
+<nav th:fragment="adminNav(active)" class="d-flex flex-wrap gap-2 mb-4" aria-label="Sections d'administration">
+    <a class="btn" th:classappend="${active == 'cinemas'} ? 'btn-ink' : 'btn-outline-ink'"
+       th:href="@{/admin/cinemas}">Cinémas</a>
+    <a class="btn" th:classappend="${active == 'rooms'} ? 'btn-ink' : 'btn-outline-ink'"
+       th:href="@{/admin/rooms}">Salles</a>
+    <a class="btn" th:classappend="${active == 'movies'} ? 'btn-ink' : 'btn-outline-ink'"
+       th:href="@{/admin/movies}">Films</a>
+    <a class="btn" th:classappend="${active == 'sessions'} ? 'btn-ink' : 'btn-outline-ink'"
+       th:href="@{/admin/sessions}">Séances</a>
+</nav>
+
 <div th:fragment="alerts">
     <div th:if="${success}" class="alert alert-retro-success" role="status" th:text="${success}">Succès</div>
     <div th:if="${error}" class="alert alert-retro-error" role="alert" th:text="${error}">Erreur</div>
