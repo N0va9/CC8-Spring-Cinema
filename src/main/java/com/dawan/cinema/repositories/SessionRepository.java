@@ -1,6 +1,7 @@
 package com.dawan.cinema.repositories;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,4 +48,33 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
                           @Param("debut") LocalDateTime debut,
                           @Param("fin") LocalDateTime fin,
                           @Param("excludeId") Long excludeId);
+
+    /**
+     * Séances d'un cinéma dont le début est dans [start, end[, triées par film puis par heure.
+     */
+    @EntityGraph(attributePaths = {"movie", "room", "schedule"})
+    @Query("""
+        SELECT s FROM Session s
+        WHERE s.room.cinema.id = :cinemaId
+            AND s.schedule.heureDebut >= :start
+            AND s.schedule.heureDebut <  :end
+        ORDER BY s.movie.titre, s.schedule.heureDebut
+        """)
+    List<Session> findByCinemaBetween(@Param("cinemaId") Long cinemaId,
+                                    @Param("start") LocalDateTime start,
+                                    @Param("end") LocalDateTime end);
+
+    /**
+     * Séances à venir des films dont le titre contient le mot-clé,
+     * triées par film, puis cinéma, puis heure.
+     */
+    @EntityGraph(attributePaths = {"movie", "room", "room.cinema", "schedule"})
+    @Query("""
+        SELECT s FROM Session s
+        WHERE LOWER(s.movie.titre) LIKE LOWER(CONCAT('%', :keyword, '%'))
+            AND s.schedule.heureDebut >= :from
+        ORDER BY s.movie.titre, s.room.cinema.nom, s.schedule.heureDebut
+        """)
+    List<Session> findUpcomingByMovieTitle(@Param("keyword") String keyword,
+                                        @Param("from") LocalDateTime from);
 }
