@@ -38,11 +38,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
         );
     }
 
-    /* Erreur métier : 400. */
-    @ExceptionHandler(GlobalException.class)
-    public ProblemDetail handleBusiness(GlobalException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
 
     /* Erreur imprévue : 500 */
     @ExceptionHandler(Exception.class)
