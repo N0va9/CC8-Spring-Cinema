@@ -23,7 +23,9 @@
             <ul class="navbar-nav ms-auto gap-md-3">
                 <li class="nav-item"><a class="nav-link" th:href="@{/}">CINÉMAS</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/films}">FILMS</a></li>
-                <li class="nav-item" th:if="${loggedIn}"><a class="nav-link" th:href="@{/admin/cinemas}">ADMIN</a></li>
+                <li class="nav-item" th:if="${loggedIn}">
+                    <a class="nav-link" th:href="@{/admin/cinemas}">ADMIN</a>
+                </li>
                 <li class="nav-item" th:if="${loggedIn}">
                     <form th:action="@{/logout}" method="post">
                         <button type="submit" class="nav-link border-0 bg-transparent">DÉCONNEXION</button>
@@ -69,6 +71,10 @@
        th:href="@{/admin/movies}">Films</a>
     <a class="btn" th:classappend="${active == 'sessions'} ? 'btn-ink' : 'btn-outline-ink'"
        th:href="@{/admin/sessions}">Séances</a>
+    <a class="btn" th:classappend="${active == 'users'} ? 'btn-ink' : 'btn-outline-ink'"
+        th:href="@{/admin/users}">Utilisateurs</a>
+    <a class="btn" th:classappend="${active == 'account'} ? 'btn-ink' : 'btn-outline-ink'"
+        th:href="@{/admin/account/password}">Mon mot de passe</a>
 </nav>
 
 <div th:fragment="alerts">

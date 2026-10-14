@@ -119,6 +119,8 @@ public abstract class AdminCrudController<F extends AdminForm<D>, D> {
             redirect.addFlashAttribute("success", "Suppression effectuée.");
         } catch (DataIntegrityViolationException ex) {
             redirect.addFlashAttribute("error", deleteConflictMessage());
+        } catch (BusinessException ex) {
+            redirect.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:" + basePath;
     }
