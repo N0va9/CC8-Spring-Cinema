@@ -64,4 +64,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
         problem.setProperty("errors", errors);
         return ResponseEntity.status(status).body(problem);
     }
+
+    /** Règle métier non respectée : 409. */
+    @ExceptionHandler(BusinessException.class)
+    public ProblemDetail handleBusinessRule(BusinessException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+    }
 }

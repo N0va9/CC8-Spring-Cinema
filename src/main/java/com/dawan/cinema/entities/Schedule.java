@@ -7,8 +7,15 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
+/**
+ * Créneau horaire (Horaire du MCD), partageable par plusieurs séances.
+ * Un même couple début/fin n'existe qu'une fois.
+ */
 @Entity
+@Table (uniqueConstraints = @UniqueConstraint (columnNames = {"heure_debut", "heure_fin"}))
 public class Schedule extends BaseEntity {
 
     @Column(nullable = false)

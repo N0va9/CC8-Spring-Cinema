@@ -4,26 +4,27 @@ import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Session extends BaseEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "movie_id", nullable = false)
-    private Movie movie;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "movie_id", nullable = false)
+	private Movie movie;
 
-    @ManyToOne
-    @JoinColumn(name = "schedule_id", nullable = false)
-    private Schedule schedule;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "schedule_id", nullable = false)
+	private Schedule schedule;
 
-    @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)
-    private Room room;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "room_id", nullable = false)
+	private Room room;
 
-    @Column(nullable = false, scale = 2)
-    private BigDecimal price;
+	@Column(nullable = false, precision = 6, scale = 2)
+	private BigDecimal price;
 
 	public Movie getMovie() {
 		return movie;

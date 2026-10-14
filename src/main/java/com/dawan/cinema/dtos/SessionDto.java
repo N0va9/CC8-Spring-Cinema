@@ -1,38 +1,30 @@
 package com.dawan.cinema.dtos;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-public class SessionDto {
-    private int movieId;
-    private int scheduleID;
-    private int roomId;
-    private BigDecimal price;
-    
-	public int getMovieId() {
-		return movieId;
-	}
-	public void setMovieId(int movieId) {
-		this.movieId = movieId;
-	}
-	public int getScheduleID() {
-		return scheduleID;
-	}
-	public void setScheduleID(int scheduleID) {
-		this.scheduleID = scheduleID;
-	}
-	public int getRoomId() {
-		return roomId;
-	}
-	public void setRoomId(int roomId) {
-		this.roomId = roomId;
-	}
-	public BigDecimal getPrice() {
-		return price;
-	}
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-    
-    
-    
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+
+public record SessionDto(
+        Long id,
+        @NotNull Long movieId,
+        String movieTitre,
+        @NotNull Long roomId,
+        Integer roomNumero,
+        String cinemaNom,
+        @NotNull LocalDateTime heureDebut,
+        @NotNull LocalDateTime heureFin,
+        @NotNull @PositiveOrZero @Digits(integer = 4, fraction = 2) BigDecimal price) {
+
+    /** Validation multi-champs : la fin doit être strictement après le début. */
+    @JsonIgnore
+    @AssertTrue(message = "l'heure de fin doit être après l'heure de début")
+    public boolean isPlageHoraireValide() {
+        return heureDebut == null || heureFin == null || heureFin.isAfter(heureDebut);
+    }
 }
