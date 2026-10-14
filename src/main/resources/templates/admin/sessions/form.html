@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Séance')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <a th:href="@{/admin/sessions}" class="fw-bold">&larr; Retour à la liste</a>
+    <h1 class="font-display display-5 mt-3 mb-4"
+        th:text="${form.id == null} ? 'Nouvelle séance' : 'Modifier la séance'">Séance</h1>
+
+    <form class="card-retro p-4 form-retro" th:object="${form}" method="post" novalidate
+          th:action="${form.id == null} ? @{/admin/sessions} : @{/admin/sessions/{id}(id=${form.id})}">
+        <input type="hidden" th:field="*{id}">
+
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-retro-error" role="alert">
+            <p class="mb-0" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Erreur</p>
+        </div>
+
+        <div class="mb-3">
+            <label for="movieId" class="form-label fw-bold">Film</label>
+            <select id="movieId" class="form-select retro-input" th:field="*{movieId}" th:errorclass="is-invalid">
+                <option value="">Choisir un film</option>
+                <option th:each="m : ${movies}" th:value="${m.id}" th:text="|${m.titre} (${m.annee})|">Film</option>
+            </select>
+            <div class="invalid-feedback" th:errors="*{movieId}">Erreur</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="roomId" class="form-label fw-bold">Salle</label>
+            <select id="roomId" class="form-select retro-input" th:field="*{roomId}" th:errorclass="is-invalid">
+                <option value="">Choisir une salle</option>
+                <option th:each="r : ${rooms}" th:value="${r.id}"
+                        th:text="|${r.cinemaNom} · salle ${r.numero} (${r.capacite} places)|">Salle</option>
+            </select>
+            <div class="invalid-feedback" th:errors="*{roomId}">Erreur</div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <label for="heureDebut" class="form-label fw-bold">Début</label>
+                <input id="heureDebut" type="datetime-local" class="form-control retro-input"
+                       th:field="*{heureDebut}" th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{heureDebut}">Erreur</div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="heureFin" class="form-label fw-bold">Fin</label>
+                <input id="heureFin" type="datetime-local" class="form-control retro-input"
+                       th:field="*{heureFin}" th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{heureFin}">Erreur</div>
+            </div>
+        </div>
+        <p class="text-danger fw-bold mt-2 mb-0" th:if="${#fields.hasErrors('plageHoraireValide')}"
+           th:errors="*{plageHoraireValide}">Erreur de plage</p>
+
+        <div class="mt-3" style="max-width: 12rem">
+            <label for="price" class="form-label fw-bold">Prix (€)</label>
+            <input id="price" type="number" min="0" step="0.01" class="form-control retro-input"
+                   th:field="*{price}" th:errorclass="is-invalid">
+            <div class="invalid-feedback" th:errors="*{price}">Erreur</div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3 mt-4">
+            <button type="submit" class="btn btn-retro px-4">ENREGISTRER</button>
+            <a class="btn btn-ink d-inline-flex align-items-center" th:href="@{/admin/sessions}">Annuler</a>
+        </div>
+    </form>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
