@@ -1,4 +1,4 @@
-package com.dawan.cinema.controllers;
+package com.dawan.cinema.controllers.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

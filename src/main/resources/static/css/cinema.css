@@ -144,3 +144,36 @@ a:hover { color: var(--accent); }
     border-color: var(--ink);
     color: var(--paper);
 }
+
+/* Administration */
+.table-retro {
+    --bs-table-bg: var(--card);
+}
+.table-retro thead th {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 3px solid var(--ink);
+}
+.form-retro { max-width: 40rem; }
+.form-control.retro-input.is-invalid { border-color: var(--accent); }
+
+/* Messages flash */
+.alert-retro-success,
+.alert-retro-error {
+    border: 3px solid var(--ink);
+    border-radius: 0;
+    color: var(--ink);
+    font-weight: 700;
+}
+.alert-retro-success { background: #DCEBD5; }
+.alert-retro-error { background: #F4D3CC; }
+
+/* Navigation par date : compacte sur mobile */
+.date-nav .btn {
+    min-width: 2.75rem;
+}
+.date-nav input[type="date"] {
+    min-width: 0;
+}

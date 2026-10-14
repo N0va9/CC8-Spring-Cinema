@@ -1,4 +1,4 @@
-package com.dawan.cinema.controllers;
+package com.dawan.cinema.controllers.api;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
