@@ -1,10 +1,14 @@
 package com.dawan.cinema.mappers;
 
+/**
+ * Conversion entre un entité et son DTO
+ *
+ * @param <E> type de l'entité
+ * @param <D> type du DTO
+ */
 public interface Mapper<E, D> {
     D toDto(E entity);
     E toEntity(D dto);
 
-    default E updateEntityFromDto(E entity, D dto) {
-        throw new UnsupportedOperationException("updateEntityFromDto not implemented");
-    }
+    void updateEntityFromDto(E entity, D dto);
 }

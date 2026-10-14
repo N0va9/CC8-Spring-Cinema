@@ -1,55 +1,73 @@
 package com.dawan.cinema.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.dawan.cinema.entities.BaseEntity;
+import com.dawan.cinema.exceptions.ResourceNotFoundException;
 import com.dawan.cinema.mappers.Mapper;
-import org.springframework.data.repository.CrudRepository;
-import java.util.Optional;
 
-public abstract class CRUDServiceImpl<T, D, ID> implements CRUDService<T, D, ID> {
 
-    protected final CrudRepository<T, ID> repository;
-    protected final Mapper<T, D> mapper;
+/**
+ * Implementation générique du CRUD 
+ * 
+ * @param <E> type de l'entité
+ * @param <D> type du DTO
+ */
+@Transactional (readOnly = true)
+public abstract class CRUDServiceImpl<E extends BaseEntity, D> implements CRUDService<D> {
 
-    public CRUDServiceImpl(CrudRepository<T, ID> repository, Mapper<T, D> mapper) {
+    protected final JpaRepository<E, Long> repository;
+    protected final Mapper<E, D> mapper;
+    private final String resourceName;
+
+    protected CRUDServiceImpl(JpaRepository<E, Long> repository, Mapper<E, D> mapper, Class<E> entityClass) {
         this.repository = repository;
         this.mapper = mapper;
+        this.resourceName = entityClass.getSimpleName();
+    }
+
+    @Override 
+    public Page<D> getAll(Pageable pageable) {
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
     @Override
-    public Iterable<T> getAll() {
-        return repository.findAll();
+    public D getById(Long id) {
+        return mapper.toDto(findEntityById(id));
     }
 
-    @Override
-    public boolean existsById(ID id) {
-        return repository.existsById(id);
-    }
-
-    @Override
-    public Optional<T> getById(ID id) {
-        return repository.findById(id);
-    }
-
-    @Override
+    @Override 
+    @Transactional
     public D create(D dto) {
-        T entity = mapper.toEntity(dto);
-        T entitySaved = repository.save(entity);
-        return mapper.toDto(entitySaved);
+        E saved = repository.save(mapper.toEntity(dto));
+        return mapper.toDto(saved);
     }
 
-    @Override
-    public T update(ID id, D dto) {
-        T toUpdate = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Entity not found with id : " + id));
-
-        T updated = mapper.updateEntityFromDto(toUpdate, dto);
-        return repository.save(updated);
+    @Override 
+    @Transactional 
+    public D update(Long id, D dto) {
+        E entity = findEntityById(id);
+        mapper.updateEntityFromDto(entity, dto);
+        return mapper.toDto(entity);
     }
 
-    @Override
-    public void delete(ID id) {
-        if (existsById(id)) {
-            throw new RuntimeException("Resource not found with id : " + id);
+    @Override 
+    @Transactional 
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException(resourceName, id);
         }
         repository.deleteById(id);
     }
+
+    /** Récupère l'entité ou lève ResourceNotFoundException */
+    protected E findEntityById(Long id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(resourceName, id));
+        
+    }
+
 }

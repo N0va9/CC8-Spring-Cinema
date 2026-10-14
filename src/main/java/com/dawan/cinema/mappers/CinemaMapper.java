@@ -5,38 +5,30 @@ import org.springframework.stereotype.Component;
 import com.dawan.cinema.dtos.CinemaDto;
 import com.dawan.cinema.entities.Cinema;
 
+/*
+* Conversion Cinema <-> CinemaDto
+*/
 @Component
-public class CinemaMapper implements Mapper<Cinema, CinemaDto>{
-	
-	@Override
-	public Cinema toEntity(CinemaDto dto) {
-		Cinema cinema = new Cinema();
-		cinema.setNom(dto.getNom());
-		cinema.setVille(dto.getVille());
-		cinema.setRue(dto.getRue());
-		cinema.setNumero(dto.getNumero());
-
-		return cinema;
-    }
+public class CinemaMapper implements Mapper<Cinema, CinemaDto> {
 
 	@Override
-    public CinemaDto toDto(Cinema cinema) {
-    	CinemaDto dto = new CinemaDto();
-		dto.setNom(cinema.getNom());
-		dto.setVille(cinema.getVille());
-		dto.setRue(cinema.getRue());
-		dto.setNumero(cinema.getNumero());
-
-		return dto;
+	public CinemaDto toDto(Cinema cinema) {
+		return new CinemaDto(cinema.getId(), cinema.getNom(), cinema.getVille(),
+				cinema.getRue(), cinema.getNumero());
 	}
 
 	@Override
-	public Cinema updateEntityFromDto(Cinema cinema,CinemaDto dto) {
-		cinema.setNom(dto.getNom());
-		cinema.setVille(dto.getVille());
-		cinema.setRue(dto.getRue());
-		cinema.setNumero(dto.getNumero());
-
+	public Cinema toEntity(CinemaDto dto) {
+		Cinema cinema = new Cinema();
+		updateEntityFromDto(cinema, dto);
 		return cinema;
-    }
+	}
+
+	@Override
+	public void updateEntityFromDto(Cinema cinema, CinemaDto dto) {
+		cinema.setNom(dto.nom());
+		cinema.setVille(dto.ville());
+		cinema.setRue(dto.rue());
+		cinema.setNumero(dto.numero());
+	}
 }

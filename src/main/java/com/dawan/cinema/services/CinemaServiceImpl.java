@@ -8,8 +8,10 @@ import com.dawan.cinema.mappers.CinemaMapper;
 import com.dawan.cinema.repositories.CinemaRepository;
 
 @Service
-public class CinemaServiceImpl extends CRUDServiceImpl<Cinema, CinemaDto, Long> {
+public class CinemaServiceImpl extends CRUDServiceImpl<Cinema, CinemaDto> implements CinemaService {
+	
 	public CinemaServiceImpl(CinemaRepository repository, CinemaMapper mapper) {
-		super(repository, mapper);
+		super(repository, mapper, Cinema.class);
 	}
+
 }
