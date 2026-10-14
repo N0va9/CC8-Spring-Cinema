@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CinemaForm {
+public class CinemaForm implements AdminForm<CinemaDto> {
 
     private Long id;
 
@@ -45,6 +45,7 @@ public class CinemaForm {
     }
 
     /** Convertit le formulaire en DTO pour le service. */
+    @Override 
     public CinemaDto toDto() {
         return new CinemaDto(id, nom, ville, rue, numero);
     }
