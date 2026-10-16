@@ -2,8 +2,10 @@ package com.dawan.cinema.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name="users")
 public class User extends BaseEntity {
 
 	private String firstName;
