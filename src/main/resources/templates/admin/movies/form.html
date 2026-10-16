@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Film')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <a th:href="@{/admin/movies}" class="fw-bold">&larr; Retour à la liste</a>
+    <h1 class="font-display display-5 mt-3 mb-4"
+        th:text="${form.id == null} ? 'Nouveau film' : 'Modifier le film'">Film</h1>
+
+    <form class="card-retro p-4 form-retro" th:object="${form}" method="post" novalidate
+          th:action="${form.id == null} ? @{/admin/movies} : @{/admin/movies/{id}(id=${form.id})}">
+        <input type="hidden" th:field="*{id}">
+
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-retro-error" role="alert">
+            <p class="mb-0" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Erreur</p>
+        </div>
+
+        <div class="mb-3">
+            <label for="titre" class="form-label fw-bold">Titre</label>
+            <input id="titre" type="text" class="form-control retro-input" th:field="*{titre}" th:errorclass="is-invalid">
+            <div class="invalid-feedback" th:errors="*{titre}">Erreur</div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-12 col-md-4">
+                <label for="annee" class="form-label fw-bold">Année</label>
+                <input id="annee" type="number" min="1895" class="form-control retro-input" th:field="*{annee}"
+                       th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{annee}">Erreur</div>
+            </div>
+            <div class="col-12 col-md-8">
+                <label for="genre" class="form-label fw-bold">Genre</label>
+                <input id="genre" type="text" class="form-control retro-input" th:field="*{genre}"
+                       th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{genre}">Erreur</div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3 mt-4">
+            <button type="submit" class="btn btn-retro px-4">ENREGISTRER</button>
+            <a class="btn btn-ink d-inline-flex align-items-center" th:href="@{/admin/movies}">Annuler</a>
+        </div>
+    </form>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

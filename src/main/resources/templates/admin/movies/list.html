@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Films')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <nav th:replace="~{fragments/layout :: adminNav('movies')}"></nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+        <h1 class="font-display display-5 mb-0">Admin · <span class="text-accent">Films</span></h1>
+        <a class="btn btn-retro px-4 d-inline-flex align-items-center" th:href="@{/admin/movies/new}">+ NOUVEAU FILM</a>
+    </div>
+
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <form class="row g-3 search-form mb-4" th:action="@{/admin/movies}" method="get" role="search">
+        <div class="col-12 col-md">
+            <label for="keyword" class="visually-hidden">Rechercher un film</label>
+            <input id="keyword" class="form-control retro-input" type="search" name="keyword"
+                   th:value="${keyword}" placeholder="Titre ou genre">
+        </div>
+        <div class="col-12 col-md-auto d-grid">
+            <button class="btn btn-ink px-4" type="submit">Rechercher</button>
+        </div>
+    </form>
+
+    <p th:if="${page.empty}" class="fw-bold">Aucun film.</p>
+
+    <div class="table-responsive card-retro" th:unless="${page.empty}">
+        <table class="table table-retro align-middle mb-0">
+            <thead>
+            <tr>
+                <th scope="col">Titre</th>
+                <th scope="col">Année</th>
+                <th scope="col">Genre</th>
+                <th scope="col" class="text-end">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${page.content}">
+                <td class="fw-bold" th:text="${m.titre}">Titre</td>
+                <td th:text="${m.annee}">2024</td>
+                <td th:text="${m.genre}">Genre</td>
+                <td class="text-end">
+                    <div class="d-inline-flex gap-2">
+                        <a class="btn btn-ink btn-sm" th:href="@{/admin/movies/{id}/edit(id=${m.id})}">Modifier</a>
+                        <form th:action="@{/admin/movies/{id}/delete(id=${m.id})}" method="post"
+                              onsubmit="return confirm('Supprimer ce film ?');">
+                            <button class="btn btn-outline-danger btn-sm rounded-0" type="submit">Supprimer</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <nav th:replace="~{fragments/layout :: pagination(${page}, '/admin/movies', ${keyword})}"></nav>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

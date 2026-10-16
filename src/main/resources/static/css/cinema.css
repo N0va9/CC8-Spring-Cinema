@@ -177,3 +177,46 @@ a:hover { color: var(--accent); }
 .date-nav input[type="date"] {
     min-width: 0;
 }
+
+/* Menus déroulants au style rétro */
+.form-select.retro-input {
+    border: 3px solid var(--ink);
+    border-radius: 0;
+    background-color: var(--card);
+    min-height: 3.5rem;
+}
+.form-select.retro-input:focus {
+    border-color: var(--accent);
+    box-shadow: none;
+}
+.form-select.retro-input.is-invalid { border-color: var(--accent); }
+
+/* Onglets d'administration */
+.btn-outline-ink {
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    color: var(--ink);
+    font-weight: 700;
+}
+.btn-outline-ink:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+/* Grille de tickets : toutes les cases ont la même largeur et s'alignent en colonnes */
+.ticket-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+    gap: 0.5rem;
+}
+.ticket-grid .ticket {
+    min-width: 0;
+}
+.ticket-info {
+    white-space: nowrap;
+}
+
+/* Programme d'un cinéma : la grille prend la place restante à côté du titre du film */
+.tickets-col {
+    flex: 1 1 22rem;
+}

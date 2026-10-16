@@ -32,7 +32,7 @@
         <div class="mb-4" th:each="c : ${result.cinemas}">
             <a class="font-display h4 text-decoration-none" th:href="@{/cinemas/{id}(id=${c.cinema.id})}"
                th:text="|${c.cinema.nom} (${c.cinema.ville})|">Cinéma</a>
-            <div class="d-flex flex-wrap gap-2 mt-2">
+            <div class="ticket-grid mt-2">
                 <span class="ticket" th:each="s : ${c.sessions}">
                     <span class="ticket-time" th:text="${#temporals.format(s.heureDebut, 'HH:mm')}">14:00</span>
                     <span class="ticket-info"
