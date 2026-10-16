@@ -1,5 +1,6 @@
 package com.dawan.cinema.controllers.web;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -33,5 +34,10 @@ public class AdminMovieController extends AdminCrudController<MovieForm, MovieDt
     @Override
     protected String deleteConflictMessage() {
         return "Impossible de supprimer ce film : des séances sont programmées.";
+    }
+
+    @Override
+    protected Sort defaultSort() {
+        return Sort.by("titre");
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import com.dawan.cinema.controllers.web.forms.AdminForm;
 import com.dawan.cinema.exceptions.BusinessException;
@@ -66,13 +68,20 @@ public abstract class AdminCrudController<F extends AdminForm<D>, D> {
         // aucune donnée de référence par défaut
     }
 
-    // --- Actions ---
+    /** Tri appliqué à la liste quand l'URL n'en précise pas. Par id par défaut. */
+    protected Sort defaultSort() {
+        return Sort.by("id");
+    }
+
 
     @GetMapping
     public String list(@RequestParam(required = false) String keyword,
-            @PageableDefault(size = 10, sort = "id") Pageable pageable, Model model) {
+            @PageableDefault(size = 10) Pageable pageable, Model model) {
+        Pageable sorted = pageable.getSort().isSorted()
+                ? pageable
+                : PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), defaultSort());
         model.addAttribute("keyword", keyword);
-        model.addAttribute("page", service.getAll(keyword, pageable));
+        model.addAttribute("page", service.getAll(keyword, sorted));
         return viewPrefix + "/list";
     }
 

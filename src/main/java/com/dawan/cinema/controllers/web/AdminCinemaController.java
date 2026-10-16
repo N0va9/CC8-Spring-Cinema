@@ -1,7 +1,9 @@
 package com.dawan.cinema.controllers.web;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 
 import com.dawan.cinema.controllers.web.forms.CinemaForm;
 import com.dawan.cinema.dtos.CinemaDto;
@@ -38,5 +40,10 @@ public class AdminCinemaController extends AdminCrudController<CinemaForm, Cinem
     @Override
     protected String deleteConflictMessage() {
         return "Impossible de supprimer ce cinéma : des salles y sont encore rattachées.";
+    }
+
+    @Override
+    protected Sort defaultSort() {
+        return Sort.by("nom");
     }
 }

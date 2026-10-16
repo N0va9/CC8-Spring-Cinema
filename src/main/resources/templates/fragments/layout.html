@@ -31,9 +31,25 @@
 
 <nav th:fragment="pagination(page, url, keyword)" th:if="${page.totalPages > 1}" class="mt-4" aria-label="Pagination">
     <ul class="pagination justify-content-center flex-wrap gap-1">
-        <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
-            th:classappend="${i == page.number} ? 'active'">
-            <a class="page-link" th:href="@{${url}(keyword=${keyword}, page=${i})}" th:text="${i + 1}">1</a>
+        <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+            <a class="page-link" aria-label="Page précédente"
+               th:href="@{${url}(keyword=${keyword}, page=${page.number - 1})}"
+               th:tabindex="${page.first} ? '-1'" th:aria-disabled="${page.first} ? 'true'">&lsaquo;</a>
+        </li>
+
+        <li class="page-item" th:each="item : ${@pagination.items(page)}"
+            th:classappend="${item.ellipsis} ? 'disabled' : (${item.number == page.number} ? 'active')">
+            <span class="page-link" th:if="${item.ellipsis}">&hellip;</span>
+            <a class="page-link" th:unless="${item.ellipsis}"
+               th:href="@{${url}(keyword=${keyword}, page=${item.number})}"
+               th:aria-current="${item.number == page.number} ? 'page'"
+               th:text="${item.number + 1}">1</a>
+        </li>
+
+        <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+            <a class="page-link" aria-label="Page suivante"
+               th:href="@{${url}(keyword=${keyword}, page=${page.number + 1})}"
+               th:tabindex="${page.last} ? '-1'" th:aria-disabled="${page.last} ? 'true'">&rsaquo;</a>
         </li>
     </ul>
 </nav>

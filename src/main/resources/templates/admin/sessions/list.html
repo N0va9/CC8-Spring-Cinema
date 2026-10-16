@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Séances')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <nav th:replace="~{fragments/layout :: adminNav('sessions')}"></nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+        <h1 class="font-display display-5 mb-0">Admin · <span class="text-accent">Séances</span></h1>
+        <a class="btn btn-retro px-4 d-inline-flex align-items-center" th:href="@{/admin/sessions/new}">+ NOUVELLE SÉANCE</a>
+    </div>
+
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <form class="row g-3 search-form mb-4" th:action="@{/admin/sessions}" method="get" role="search">
+        <div class="col-12 col-md">
+            <label for="keyword" class="visually-hidden">Rechercher une séance</label>
+            <input id="keyword" class="form-control retro-input" type="search" name="keyword"
+                   th:value="${keyword}" placeholder="Titre du film ou nom du cinéma">
+        </div>
+        <div class="col-12 col-md-auto d-grid">
+            <button class="btn btn-ink px-4" type="submit">Rechercher</button>
+        </div>
+    </form>
+
+    <p th:if="${page.empty}" class="fw-bold">Aucune séance.</p>
+
+    <div class="table-responsive card-retro" th:unless="${page.empty}">
+        <table class="table table-retro align-middle mb-0">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Horaire</th>
+                <th scope="col">Film</th>
+                <th scope="col">Cinéma · salle</th>
+                <th scope="col">Prix</th>
+                <th scope="col" class="text-end">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="s : ${page.content}">
+                <td class="text-nowrap" th:text="${#temporals.format(s.heureDebut, 'EEE dd/MM/yyyy')}">mer. 15/10/2026</td>
+                <td class="text-nowrap"
+                    th:text="|${#temporals.format(s.heureDebut, 'HH:mm')} - ${#temporals.format(s.heureFin, 'HH:mm')}|">14:00 - 16:30</td>
+                <td class="fw-bold" th:text="${s.movieTitre}">Film</td>
+                <td th:text="|${s.cinemaNom} · salle ${s.roomNumero}|">Cinéma · salle 1</td>
+                <td class="text-nowrap" th:text="|${#numbers.formatDecimal(s.price, 1, 2, 'COMMA')} €|">9,50 €</td>
+                <td class="text-end">
+                    <div class="d-inline-flex gap-2">
+                        <a class="btn btn-ink btn-sm" th:href="@{/admin/sessions/{id}/edit(id=${s.id})}">Modifier</a>
+                        <form th:action="@{/admin/sessions/{id}/delete(id=${s.id})}" method="post"
+                              onsubmit="return confirm('Supprimer cette séance ?');">
+                            <button class="btn btn-outline-danger btn-sm rounded-0" type="submit">Supprimer</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <nav th:replace="~{fragments/layout :: pagination(${page}, '/admin/sessions', ${keyword})}"></nav>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

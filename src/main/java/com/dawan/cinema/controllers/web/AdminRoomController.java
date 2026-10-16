@@ -53,4 +53,9 @@ public class AdminRoomController extends AdminCrudController<RoomForm, RoomDto> 
         model.addAttribute("cinemas",
                 cinemaService.getAll(null, Pageable.unpaged(Sort.by("nom"))).getContent());
     }
+
+    @Override
+    protected Sort defaultSort() {
+        return Sort.by("cinema.nom", "numero");
+    }
 }
