@@ -1,30 +1,18 @@
 package com.dawan.cinema.dtos;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-public class RoomDto {
-    private int cinemaId;
-    private int capacite;
-    private LocalDateTime dateConstr;
-    
-	public int getCinemaId() {
-		return cinemaId;
-	}
-	public void setCinemaId(int cinemaId) {
-		this.cinemaId = cinemaId;
-	}
-	public int getCapacite() {
-		return capacite;
-	}
-	public void setCapacite(int capacite) {
-		this.capacite = capacite;
-	}
-	public LocalDateTime getDateConstr() {
-		return dateConstr;
-	}
-	public void setDateConstr(LocalDateTime dateConstr) {
-		this.dateConstr = dateConstr;
-	}
-    
-    
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+
+public record RoomDto(
+	Long id,
+	@NotNull Long cinemaId,
+	String cinemaNom,
+	@Positive int numero,
+	@Positive int capacite,
+	@NotNull @PastOrPresent LocalDate dateConstr
+){
+
 }

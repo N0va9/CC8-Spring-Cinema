@@ -39,31 +39,25 @@ public abstract class CRUDServiceImpl<E extends BaseEntity, D, R extends JpaRepo
         return page.map(mapper::toDto);
     }
 
-    /**
-     * Recherche propre à chaque entité
-     *
-     * @param keyword  mot-clé non vide
-     * @param pageable page, taille et tri demandés
-     */
-    protected abstract Page<E> searchByKeyword(String keyword, Pageable pageable);
-
     @Override
     public D getById(Long id) {
         return mapper.toDto(findEntityById(id));
     }
 
-    @Override 
+    @Override
     @Transactional
     public D create(D dto) {
-        E saved = repository.save(mapper.toEntity(dto));
-        return mapper.toDto(saved);
+        E entity = mapper.toEntity(dto);
+        resolveRelations(entity, dto);
+        return mapper.toDto(repository.save(entity));
     }
 
-    @Override 
-    @Transactional 
+    @Override
+    @Transactional
     public D update(Long id, D dto) {
         E entity = findEntityById(id);
         mapper.updateEntityFromDto(entity, dto);
+        resolveRelations(entity, dto);
         return mapper.toDto(entity);
     }
 
@@ -81,6 +75,25 @@ public abstract class CRUDServiceImpl<E extends BaseEntity, D, R extends JpaRepo
         return repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(resourceName, id));
         
+    }
+
+    /**
+     * Recherche propre à chaque entité
+     *
+     * @param keyword  mot-clé non vide
+     * @param pageable page, taille et tri demandés
+     */
+    protected abstract Page<E> searchByKeyword(String keyword, Pageable pageable);
+
+    /**
+     * Rattache les entités liées (ex. le cinéma d'une salle)
+     * à partir des identifiants du DTO. Ne fait rien par défaut.
+     *
+     * @param entity entité à compléter
+     * @param dto    DTO source
+     */
+    protected void resolveRelations(E entity, D dto) {
+        // aucune relation par défaut
     }
 
 }
