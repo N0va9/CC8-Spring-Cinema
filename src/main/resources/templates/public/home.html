@@ -35,14 +35,7 @@
             </div>
         </div>
 
-        <nav th:if="${cinemas.totalPages > 1}" class="mt-5" aria-label="Pagination">
-            <ul class="pagination justify-content-center flex-wrap gap-1">
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, cinemas.totalPages - 1)}"
-                    th:classappend="${i == cinemas.number} ? 'active'">
-                    <a class="page-link" th:href="@{/(keyword=${keyword}, page=${i})}" th:text="${i + 1}">1</a>
-                </li>
-            </ul>
-        </nav>
+        <nav th:replace="~{fragments/layout :: pagination(${cinemas}, '/', ${keyword})}"></nav>
     </section>
 </main>
 

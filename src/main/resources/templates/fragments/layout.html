@@ -29,6 +29,15 @@
     </div>
 </nav>
 
+<nav th:fragment="pagination(page, url, keyword)" th:if="${page.totalPages > 1}" class="mt-4" aria-label="Pagination">
+    <ul class="pagination justify-content-center flex-wrap gap-1">
+        <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+            th:classappend="${i == page.number} ? 'active'">
+            <a class="page-link" th:href="@{${url}(keyword=${keyword}, page=${i})}" th:text="${i + 1}">1</a>
+        </li>
+    </ul>
+</nav>
+
 <div th:fragment="alerts">
     <div th:if="${success}" class="alert alert-retro-success" role="status" th:text="${success}">Succès</div>
     <div th:if="${error}" class="alert alert-retro-error" role="alert" th:text="${error}">Erreur</div>

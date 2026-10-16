@@ -7,11 +7,14 @@
 <main class="container py-5">
     <a th:href="@{/admin/cinemas}" class="fw-bold">&larr; Retour à la liste</a>
     <h1 class="font-display display-5 mt-3 mb-4"
-        th:text="${cinemaForm.id == null} ? 'Nouveau cinéma' : 'Modifier le cinéma'">Cinéma</h1>
+        th:text="${form.id == null} ? 'Nouveau cinéma' : 'Modifier le cinéma'">Cinéma</h1>
 
-    <form class="card-retro p-4 form-retro" th:object="${cinemaForm}" method="post" novalidate
-          th:action="${cinemaForm.id == null} ? @{/admin/cinemas} : @{/admin/cinemas/{id}(id=${cinemaForm.id})}">
+    <form class="card-retro p-4 form-retro" th:object="${form}" method="post" novalidate
+          th:action="${form.id == null} ? @{/admin/cinemas} : @{/admin/cinemas/{id}(id=${form.id})}">
         <input type="hidden" th:field="*{id}">
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-retro-error" role="alert">
+            <p class="mb-0" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Erreur</p>
+        </div>
 
         <div class="mb-3">
             <label for="nom" class="form-label fw-bold">Nom</label>

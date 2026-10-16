@@ -23,9 +23,9 @@
         </div>
     </form>
 
-    <p th:if="${cinemas.empty}" class="fw-bold">Aucun cinéma.</p>
+    <p th:if="${page.empty}" class="fw-bold">Aucun cinéma.</p>
 
-    <div class="table-responsive card-retro" th:unless="${cinemas.empty}">
+    <div class="table-responsive card-retro" th:unless="${page.empty}">
         <table class="table table-retro align-middle mb-0">
             <thead>
             <tr>
@@ -36,7 +36,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="c : ${cinemas.content}">
+            <tr th:each="c : ${page.content}">
                 <td class="fw-bold" th:text="${c.nom}">Nom</td>
                 <td th:text="|${c.numero} ${c.rue}|">Adresse</td>
                 <td th:text="${c.ville}">Ville</td>
@@ -54,14 +54,7 @@
         </table>
     </div>
 
-    <nav th:if="${cinemas.totalPages > 1}" class="mt-4" aria-label="Pagination">
-        <ul class="pagination justify-content-center flex-wrap gap-1">
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, cinemas.totalPages - 1)}"
-                th:classappend="${i == cinemas.number} ? 'active'">
-                <a class="page-link" th:href="@{/admin/cinemas(keyword=${keyword}, page=${i})}" th:text="${i + 1}">1</a>
-            </li>
-        </ul>
-    </nav>
+    <nav th:replace="~{fragments/layout :: pagination(${page}, '/admin/cinemas', ${keyword})}"></nav>
 </main>
 
 <footer th:replace="~{fragments/layout :: footer}"></footer>
