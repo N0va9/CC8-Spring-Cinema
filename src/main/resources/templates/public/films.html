@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Films')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <h1 class="font-display hero-title mb-4">Trouver <span class="text-accent">un film</span></h1>
+
+    <form class="row g-3 search-form mb-5" th:action="@{/films}" method="get" role="search">
+        <div class="col-12 col-md">
+            <label for="movie-keyword" class="visually-hidden">Titre du film</label>
+            <input id="movie-keyword" class="form-control retro-input" type="search" name="keyword"
+                   th:value="${keyword}" placeholder="Titre du film">
+        </div>
+        <div class="col-12 col-md-auto d-grid">
+            <button class="btn btn-retro px-4" type="submit">CHERCHER</button>
+        </div>
+    </form>
+
+    <p th:if="${#strings.isEmpty(keyword)}" class="fw-medium">
+        Saisissez un titre pour voir les prochaines séances.
+    </p>
+    <p th:if="${!#strings.isEmpty(keyword) and results.empty}" class="fw-bold">
+        Aucune séance à venir pour « <span th:text="${keyword}">mot-clé</span> ».
+    </p>
+
+    <article class="card-retro p-4 mb-5" th:each="result : ${results}">
+        <h2 class="font-display h1 mb-1" th:text="${result.movie.titre}">Titre</h2>
+        <p class="fw-medium mb-4" th:text="|${result.movie.genre} · ${result.movie.annee}|">Genre</p>
+
+        <div class="mb-4" th:each="c : ${result.cinemas}">
+            <a class="font-display h4 text-decoration-none" th:href="@{/cinemas/{id}(id=${c.cinema.id})}"
+               th:text="|${c.cinema.nom} (${c.cinema.ville})|">Cinéma</a>
+            <div class="d-flex flex-wrap gap-2 mt-2">
+                <span class="ticket" th:each="s : ${c.sessions}">
+                    <span class="ticket-time" th:text="${#temporals.format(s.heureDebut, 'HH:mm')}">14:00</span>
+                    <span class="ticket-info"
+                          th:text="|${#temporals.format(s.heureDebut, 'EEE d MMM')} · salle ${s.roomNumero}|">mer. 15 oct.</span>
+                </span>
+            </div>
+        </div>
+    </article>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

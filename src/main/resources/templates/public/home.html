@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cinémas')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <section class="container py-5">
+        <h1 class="font-display hero-title mb-4">Toutes les séances, <span class="text-accent">tous les soirs</span></h1>
+        <form class="row g-3 search-form" th:action="@{/}" method="get" role="search">
+            <div class="col-12 col-md">
+                <label for="keyword" class="visually-hidden">Rechercher un cinéma</label>
+                <input id="keyword" class="form-control retro-input" type="search" name="keyword"
+                       th:value="${keyword}" placeholder="Nom du cinéma ou ville">
+            </div>
+            <div class="col-12 col-md-auto d-grid">
+                <button class="btn btn-retro px-4" type="submit">CHERCHER</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="container pb-5">
+        <h2 class="font-display display-6 mb-4">Nos salles</h2>
+
+        <p th:if="${cinemas.empty}" class="fw-bold">Aucun cinéma ne correspond à votre recherche.</p>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col" th:each="cinema : ${cinemas.content}">
+                <article class="card-retro h-100 p-4 d-flex flex-column gap-2">
+                    <h3 class="font-display h2 mb-0" th:text="${cinema.nom}">Nom</h3>
+                    <p class="mb-0" th:text="|${cinema.numero} ${cinema.rue}, ${cinema.ville}|">Adresse</p>
+                    <a class="btn btn-ink align-self-start mt-2"
+                       th:href="@{/cinemas/{id}(id=${cinema.id})}">Programme du jour</a>
+                </article>
+            </div>
+        </div>
+
+        <nav th:if="${cinemas.totalPages > 1}" class="mt-5" aria-label="Pagination">
+            <ul class="pagination justify-content-center flex-wrap gap-1">
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, cinemas.totalPages - 1)}"
+                    th:classappend="${i == cinemas.number} ? 'active'">
+                    <a class="page-link" th:href="@{/(keyword=${keyword}, page=${i})}" th:text="${i + 1}">1</a>
+                </li>
+            </ul>
+        </nav>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

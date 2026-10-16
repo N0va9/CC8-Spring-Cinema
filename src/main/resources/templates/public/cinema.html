@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${program.cinema.nom})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <a th:href="@{/}" class="fw-bold">&larr; Toutes les salles</a>
+    <h1 class="font-display hero-title mt-3 mb-2" th:text="${program.cinema.nom}">Cinéma</h1>
+    <p class="fs-5 mb-4"
+       th:text="|${program.cinema.numero} ${program.cinema.rue}, ${program.cinema.ville}|">Adresse</p>
+
+    <div class="retro-rule d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <h2 class="font-display h3 mb-0">À l'affiche le
+            <span th:text="${#temporals.format(program.date, 'EEEE d MMMM')}">mercredi 15 octobre</span></h2>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            <a class="btn btn-ink"
+               th:href="@{/cinemas/{id}(id=${program.cinema.id}, date=${program.date.minusDays(1)})}">&larr; Veille</a>
+            <form class="d-flex gap-2" th:action="@{/cinemas/{id}(id=${program.cinema.id})}" method="get">
+                <label for="date" class="visually-hidden">Choisir une date</label>
+                <input id="date" class="form-control retro-input retro-input-sm" type="date" name="date"
+                       th:value="${program.date}">
+                <button class="btn btn-ink" type="submit">Voir</button>
+            </form>
+            <a class="btn btn-ink"
+               th:href="@{/cinemas/{id}(id=${program.cinema.id}, date=${program.date.plusDays(1)})}">Lendemain &rarr;</a>
+        </div>
+    </div>
+
+    <p th:if="${program.movies.empty}" class="fw-bold">Aucune séance programmée ce jour-là.</p>
+
+    <article class="film-row d-flex flex-wrap align-items-center gap-3 mb-4" th:each="item, stat : ${program.movies}">
+        <span class="film-num" th:text="${#numbers.formatInteger(stat.count, 2)}">01</span>
+        <div class="film-info">
+            <h3 class="font-display h2 mb-1" th:text="${item.movie.titre}">Titre</h3>
+            <p class="mb-0 fw-medium" th:text="|${item.movie.genre} · ${item.movie.annee}|">Genre</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <span class="ticket" th:each="s : ${item.sessions}">
+                <span class="ticket-time" th:text="${#temporals.format(s.heureDebut, 'HH:mm')}">14:00</span>
+                <span class="ticket-info"
+                      th:text="|Salle ${s.roomNumero} · ${#numbers.formatDecimal(s.price, 1, 2, 'COMMA')} €|">Salle 1</span>
+            </span>
+        </div>
+    </article>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
