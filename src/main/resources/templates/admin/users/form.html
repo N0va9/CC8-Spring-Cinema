@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Utilisateur')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <a th:href="@{/admin/users}" class="fw-bold">&larr; Retour à la liste</a>
+    <h1 class="font-display display-5 mt-3 mb-4"
+        th:text="${form.id == null} ? 'Nouvel administrateur' : 'Modifier le compte'">Compte</h1>
+
+    <form class="card-retro p-4 form-retro" th:object="${form}" method="post" novalidate
+          th:action="${form.id == null} ? @{/admin/users} : @{/admin/users/{id}(id=${form.id})}">
+        <input type="hidden" th:field="*{id}">
+
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-retro-error" role="alert">
+            <p class="mb-0" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Erreur</p>
+        </div>
+
+        <div class="mb-3">
+            <label for="username" class="form-label fw-bold">Identifiant</label>
+            <input id="username" type="text" class="form-control retro-input" th:field="*{username}"
+                   th:errorclass="is-invalid" autocomplete="off">
+            <div class="invalid-feedback" th:errors="*{username}">Erreur</div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <label for="firstName" class="form-label fw-bold">Prénom</label>
+                <input id="firstName" type="text" class="form-control retro-input" th:field="*{firstName}"
+                       th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{firstName}">Erreur</div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="lastName" class="form-label fw-bold">Nom</label>
+                <input id="lastName" type="text" class="form-control retro-input" th:field="*{lastName}"
+                       th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{lastName}">Erreur</div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <label for="email" class="form-label fw-bold">E-mail</label>
+            <input id="email" type="email" class="form-control retro-input" th:field="*{email}"
+                   th:errorclass="is-invalid">
+            <div class="invalid-feedback" th:errors="*{email}">Erreur</div>
+        </div>
+
+        <fieldset class="mt-4">
+            <legend class="font-display h5">Mot de passe</legend>
+            <p class="small fw-medium" th:if="${form.id != null}">Laissez vide pour conserver le mot de passe actuel.</p>
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <label for="password" class="form-label fw-bold">Mot de passe</label>
+                    <input id="password" name="password" type="password" class="form-control retro-input"
+                           autocomplete="new-password">
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="confirmPassword" class="form-label fw-bold">Confirmation</label>
+                    <input id="confirmPassword" name="confirmPassword" type="password"
+                           class="form-control retro-input" autocomplete="new-password">
+                </div>
+            </div>
+            <p class="text-danger fw-bold mt-2 mb-0" th:if="${#fields.hasErrors('passwordValide')}"
+               th:errors="*{passwordValide}">Erreur</p>
+            <p class="text-danger fw-bold mt-2 mb-0" th:if="${#fields.hasErrors('confirmationValide')}"
+               th:errors="*{confirmationValide}">Erreur</p>
+        </fieldset>
+
+        <div class="d-flex flex-wrap gap-3 mt-4">
+            <button type="submit" class="btn btn-retro px-4">ENREGISTRER</button>
+            <a class="btn btn-ink d-inline-flex align-items-center" th:href="@{/admin/users}">Annuler</a>
+        </div>
+    </form>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

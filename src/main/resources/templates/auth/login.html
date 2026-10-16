@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Connexion')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <div class="col-12 col-md-8 col-lg-5 mx-auto">
+        <h1 class="font-display display-5 mb-4">Connexion</h1>
+
+        <div th:if="${param.error}" class="alert alert-retro-error" role="alert">
+            Identifiant ou mot de passe incorrect.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-retro-success" role="status">
+            Vous êtes déconnecté.
+        </div>
+
+        <form class="card-retro p-4" th:action="@{/login}" method="post">
+            <div class="mb-3">
+                <label for="username" class="form-label fw-bold">Identifiant</label>
+                <input id="username" name="username" type="text" class="form-control retro-input"
+                       autocomplete="username" required autofocus>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label fw-bold">Mot de passe</label>
+                <input id="password" name="password" type="password" class="form-control retro-input"
+                       autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn btn-retro w-100">SE CONNECTER</button>
+        </form>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

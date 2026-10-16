@@ -1,143 +1,82 @@
 package com.dawan.cinema.services;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.dawan.cinema.entities.User;
-import com.dawan.cinema.exceptions.GlobalException;
-import com.dawan.cinema.repositories.UserRepository;
-import com.dawan.cinema.tools.DtoTool;
-import com.dawan.cinema.tools.JwtTokenTool;
-import com.dawan.cinema.tools.TokenSaver;
-import com.dawan.cinema.dtos.LoginDto;
-import com.dawan.cinema.dtos.LoginResponseDto;
 import com.dawan.cinema.dtos.UserDto;
+import com.dawan.cinema.entities.Role;
+import com.dawan.cinema.entities.User;
+import com.dawan.cinema.exceptions.BusinessException;
+import com.dawan.cinema.mappers.UserMapper;
+import com.dawan.cinema.repositories.UserRepository;
 
+/**
+ * Implémentation du service des utilisateurs : hachage des mots de passe
+ * et garde-fous sur la suppression (pas soi-même, pas le dernier administrateur).
+ */
 @Service
-public class UserServiceImpl implements IUserService{
-	
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-	private JwtTokenTool tokenTool;
-	
-	@Autowired
-	private PasswordEncoder encoder;
+public class UserServiceImpl extends CRUDServiceImpl<User, UserDto, UserRepository> implements UserService {
 
-	@Override
-	public List<UserDto> getAll() throws Exception {
-		List<UserDto> result = new ArrayList<>();
-		List<User> users = userRepository.findAll();
-		for(User u : users) {
-			result.add(DtoTool.convert(u, UserDto.class));
-		}
-		
-		return result;
-	}
-	
-	@Async
-	public CompletableFuture< List<UserDto>> getAllAsync() throws Exception {
-		List<UserDto> result = new ArrayList<>();
-		List<User> users = userRepository.findAll();
-		for(User u : users) {
-			result.add(DtoTool.convert(u, UserDto.class));
-		}
-		
-		return CompletableFuture.completedFuture(result);
-	}
+    private final PasswordEncoder passwordEncoder;
 
-	@Override
-	public UserDto findByUsername(String username) throws Exception {
-		User user = userRepository.findByUsername(username).get();
-		if(user != null) {
-			return DtoTool.convert(user, UserDto.class);
-		}
-		return null;
-	}
+    public UserServiceImpl(UserRepository repository, UserMapper mapper, PasswordEncoder passwordEncoder) {
+        super(repository, mapper, User.class);
+        this.passwordEncoder = passwordEncoder;
+    }
 
-	@Override
-	public void deleteById(Long id) throws Exception {
-		userRepository.deleteById(id);
-		
-	}
+    @Override
+    protected Page<User> searchByKeyword(String keyword, Pageable pageable) {
+        return repository.search(keyword, pageable);
+    }
 
-	@Override
-	public UserDto getById(Long id) throws Exception {
-		
-		Optional<User> optional = userRepository.findById(id);		
-		if(optional.isPresent()) {
-			return DtoTool.convert(optional.get(), UserDto.class);
-		}
-		return null;
-	}
-	
-	@Override
-	public UserDto save(UserDto userDto) throws Exception {
-		User user = DtoTool.convert(userDto, User.class);
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new GlobalException("Username déjà utilisé: " + userDto.getUsername());
+    /**
+     * Préparation avant enregistrement : rôle par défaut, et hachage du mot de passe s'il est fourni.
+     * Un mot de passe vide en modification laisse l'ancien inchangé.
+     */
+    @Override
+    protected void resolveRelations(User user, UserDto dto) {
+        if (user.getRole() == null) {
+            user.setRole(Role.ADMIN);
         }
-		user.setPassword(encoder.encode(user.getPassword()));
-		User savedUser = userRepository.saveAndFlush(user);
-		
-		return DtoTool.convert(savedUser, UserDto.class);
-	}
-	
-	@Override
-	public UserDto update(UserDto userDto) throws Exception {
-		
-		User user = DtoTool.convert(userDto, User.class);
-		if(user.getId() == null || !userRepository.existsById(user.getId())) {
-            throw new GlobalException("Utilisateur non-existant avec id: " + userDto.getId());
-		}
-		
-        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
-            throw new  GlobalException("Username déjà utilisé: " + userDto.getUsername());
+        if (dto.password() != null && !dto.password().isBlank()) {
+            user.setPassword(passwordEncoder.encode(dto.password()));
+        } else if (user.getPassword() == null) {
+            throw new BusinessException("Le mot de passe est obligatoire.");
         }
+    }
 
-		User userDB = userRepository.findById(user.getId()).get();
-		if(!userDB.getPassword().equals(user.getPassword())) {
-			user.setPassword(encoder.encode(user.getPassword()));
-		}
-		
-		User updateUser = userRepository.saveAndFlush(user);
-		
-		return DtoTool.convert(updateUser, UserDto.class);
-	}
-	
-	@Override
-	public LoginResponseDto checkLogin(LoginDto loginDto) throws Exception {
-		
-		User user = userRepository.findByUsername(loginDto.getUsername()).get();
-		
-		if(user != null && encoder.matches(loginDto.getPassword(), user.getPassword())) {
-			
-			LoginResponseDto responseDto = DtoTool.convert(user, LoginResponseDto.class);
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        User user = findEntityById(id);
+        if (user.getUsername().equals(currentUsername())) {
+            throw new BusinessException("Vous ne pouvez pas supprimer votre propre compte.");
+        }
+        if (user.getRole() == Role.ADMIN && repository.countByRole(Role.ADMIN) <= 1) {
+            throw new BusinessException("Impossible de supprimer le dernier administrateur.");
+        }
+        repository.delete(user);
+    }
 
-			Map<String, Object> claims = new HashMap<>();
-			claims.put("userId", user.getId());
-			claims.put("fullName", user.getFirstName()+" "+user.getLastName());
-			
-			String token =  tokenTool.doGenerateToken(claims, user.getUsername());
-			responseDto.setToken(token);
-			
-			TokenSaver.tokenByUsername.put(user.getUsername(), token);
-			
-			return responseDto;
-		}
-		
-		
-		throw new GlobalException("Echec connexion............");
-	}
+    @Override
+    @Transactional
+    public void changePassword(String username, String currentPassword, String newPassword) {
+        User user = repository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException("Utilisateur introuvable."));
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new BusinessException("Le mot de passe actuel est incorrect.");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+    }
 
+    /** Identifiant de l'utilisateur connecté, ou null. */
+    private static String currentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null ? authentication.getName() : null;
+    }
 }

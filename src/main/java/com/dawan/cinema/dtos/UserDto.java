@@ -1,48 +1,23 @@
 package com.dawan.cinema.dtos;
 
+import com.dawan.cinema.entities.Role;
 
-public class UserDto {
-	private int id;
-	private String firstName;
-	private String lastName;
-	private String username;
-	private String password;
-	
+/**
+ * Données d'un utilisateur.
+ * password : en entrée uniquement (création, changement), toujours null en sortie.
+ */
+public record UserDto(
+        Long id,
+        String username,
+        String firstName,
+        String lastName,
+        String email,
+        Role role,
+        String password) {
 
-	public int getId() {
-		return id;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
+    /** Masque le mot de passe : un record affiche sinon tous ses champs (risque de fuite dans les logs). */
+    @Override
+    public String toString() {
+        return "UserDto[id=" + id + ", username=" + username + ", email=" + email + ", role=" + role + "]";
+    }
 }
