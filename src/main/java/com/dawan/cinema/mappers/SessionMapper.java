@@ -3,6 +3,7 @@ package com.dawan.cinema.mappers;
 import org.springframework.stereotype.Component;
 
 import com.dawan.cinema.dtos.SessionDto;
+import com.dawan.cinema.dtos.SessionSummaryDto;
 import com.dawan.cinema.entities.Session;
 
 /**
@@ -35,5 +36,15 @@ public class SessionMapper implements Mapper<Session, SessionDto> {
     @Override
     public void updateEntityFromDto(Session session, SessionDto dto) {
         session.setPrice(dto.price());
+    }
+
+    public SessionSummaryDto toSummaryDto(Session session) {
+        return new SessionSummaryDto(
+            session.getId(),
+            session.getSchedule().getHeureDebut(),
+            session.getSchedule().getHeureFin(),
+            session.getRoom().getNumero(),
+            session.getPrice()
+        );
     }
 }
