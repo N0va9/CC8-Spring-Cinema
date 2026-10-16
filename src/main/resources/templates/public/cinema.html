@@ -13,17 +13,21 @@
     <div class="retro-rule d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <h2 class="font-display h3 mb-0">À l'affiche le
             <span th:text="${#temporals.format(program.date, 'EEEE d MMMM')}">mercredi 15 octobre</span></h2>
-        <div class="d-flex flex-wrap align-items-center gap-2">
-            <a class="btn btn-ink"
-               th:href="@{/cinemas/{id}(id=${program.cinema.id}, date=${program.date.minusDays(1)})}">&larr; Veille</a>
-            <form class="d-flex gap-2" th:action="@{/cinemas/{id}(id=${program.cinema.id})}" method="get">
+        <div class="date-nav d-flex flex-nowrap align-items-center gap-2">
+            <a class="btn btn-ink" aria-label="Veille"
+            th:href="@{/cinemas/{id}(id=${program.cinema.id}, date=${program.date.minusDays(1)})}">
+                <span aria-hidden="true">&larr;</span><span class="d-none d-md-inline"> Veille</span>
+            </a>
+            <form class="d-flex flex-nowrap gap-2" th:action="@{/cinemas/{id}(id=${program.cinema.id})}" method="get">
                 <label for="date" class="visually-hidden">Choisir une date</label>
                 <input id="date" class="form-control retro-input retro-input-sm" type="date" name="date"
-                       th:value="${program.date}">
+                    th:value="${program.date}">
                 <button class="btn btn-ink" type="submit">Voir</button>
             </form>
-            <a class="btn btn-ink"
-               th:href="@{/cinemas/{id}(id=${program.cinema.id}, date=${program.date.plusDays(1)})}">Lendemain &rarr;</a>
+            <a class="btn btn-ink" aria-label="Lendemain"
+            th:href="@{/cinemas/{id}(id=${program.cinema.id}, date=${program.date.plusDays(1)})}">
+                <span class="d-none d-md-inline">Lendemain </span><span aria-hidden="true">&rarr;</span>
+            </a>
         </div>
     </div>
 

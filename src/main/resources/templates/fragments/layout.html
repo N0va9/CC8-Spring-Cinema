@@ -23,10 +23,16 @@
             <ul class="navbar-nav ms-auto gap-md-3">
                 <li class="nav-item"><a class="nav-link" th:href="@{/}">CINÉMAS</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/films}">FILMS</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/cinemas}">ADMIN</a></li>
             </ul>
         </div>
     </div>
 </nav>
+
+<div th:fragment="alerts">
+    <div th:if="${success}" class="alert alert-retro-success" role="status" th:text="${success}">Succès</div>
+    <div th:if="${error}" class="alert alert-retro-error" role="alert" th:text="${error}">Erreur</div>
+</div>
 
 <footer th:fragment="footer" class="bg-ink mt-5">
     <div class="container py-4 small text-paper">CC8 Spring Cinema</div>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin - Cinéma')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5">
+    <a th:href="@{/admin/cinemas}" class="fw-bold">&larr; Retour à la liste</a>
+    <h1 class="font-display display-5 mt-3 mb-4"
+        th:text="${cinemaForm.id == null} ? 'Nouveau cinéma' : 'Modifier le cinéma'">Cinéma</h1>
+
+    <form class="card-retro p-4 form-retro" th:object="${cinemaForm}" method="post" novalidate
+          th:action="${cinemaForm.id == null} ? @{/admin/cinemas} : @{/admin/cinemas/{id}(id=${cinemaForm.id})}">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="mb-3">
+            <label for="nom" class="form-label fw-bold">Nom</label>
+            <input id="nom" type="text" class="form-control retro-input" th:field="*{nom}" th:errorclass="is-invalid">
+            <div class="invalid-feedback" th:errors="*{nom}">Erreur</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="ville" class="form-label fw-bold">Ville</label>
+            <input id="ville" type="text" class="form-control retro-input" th:field="*{ville}" th:errorclass="is-invalid">
+            <div class="invalid-feedback" th:errors="*{ville}">Erreur</div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-12 col-md-3">
+                <label for="numero" class="form-label fw-bold">Numéro</label>
+                <input id="numero" type="number" min="1" class="form-control retro-input" th:field="*{numero}"
+                       th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{numero}">Erreur</div>
+            </div>
+            <div class="col-12 col-md-9">
+                <label for="rue" class="form-label fw-bold">Rue</label>
+                <input id="rue" type="text" class="form-control retro-input" th:field="*{rue}" th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{rue}">Erreur</div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3 mt-4">
+            <button type="submit" class="btn btn-retro px-4">ENREGISTRER</button>
+            <a class="btn btn-ink d-inline-flex align-items-center" th:href="@{/admin/cinemas}">Annuler</a>
+        </div>
+    </form>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
